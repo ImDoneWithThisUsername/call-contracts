@@ -14,23 +14,30 @@ contract ElectronicHealthRecord {
 
     uint256 public numberOfRecords = 0;
 
-    function sendEHR(address _owner, string memory _ehrLink, string memory _encryptedKey) public returns (uint256){
+    function createEHR(address _owner, string memory _ehrLink, string memory _encryptedKey) public returns (uint256){
         EHR storage ehr = ehrs[numberOfRecords];
-
         ehr.sender = msg.sender;
         ehr.owner = _owner;
         ehr.ehrLink = _ehrLink;
         ehr.encryptedKey = _encryptedKey;
-
         numberOfRecords++;
         return numberOfRecords - 1; // return the uint key of the ehr
     }
 
-    // function getNumberOfRecords() public view returns (uint256){
-    //     return numberOfRecords;
-    // }
+    function updateEHR(uint256 idx, address _owner, string memory _ehrLink, string memory _encryptedKey) public returns (uint256){
+        ehrs[idx].sender = msg.sender;
+        ehrs[idx].owner = _owner;
+        ehrs[idx].ehrLink = _ehrLink;
+        ehrs[idx].encryptedKey = _encryptedKey;
+        return idx;
+    }
 
-    // function getEHRByKey(uint256 _key) public view returns (address, address, string memory, string memory){
-    //     return (ehrs[_key].sender, ehrs[_key].owner,ehrs[_key].ehrLink,ehrs[_key].encryptedKey);
-    // }
+    function deleteEHR(uint256 idx)public returns (uint256){
+        for(uint256 i = idx; i < numberOfRecords; i++)
+        {
+            ehrs[i] = ehrs[i+1];
+        }
+        numberOfRecords -= 1;
+        return idx;
+    }
 }
